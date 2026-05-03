@@ -112,6 +112,7 @@ class SmqttClient:
     def __init__(self, server_url: str):
         self.server_url = server_url.rstrip('/')
         self.user_id: Optional[str] = None
+        self.device_id: Optional[str] = None
         self.jwt: Optional[str] = None
         self._ed_private: Optional[Ed25519PrivateKey] = None
 
@@ -134,7 +135,9 @@ class SmqttClient:
 
         r = requests.post(f"{self.server_url}/register", json=body)
         r.raise_for_status()
-        self.user_id = r.json()['user_id']
+        data = r.json()
+        self.user_id  = data['user_id']
+        self.device_id = data['device_id']
         return self.user_id
 
     def authenticate(self) -> str:
@@ -149,7 +152,8 @@ class SmqttClient:
 
         sig = self._ed_private.sign(nonce)
         r = requests.post(f"{self.server_url}/auth/verify", json={
-            'user_id': self.user_id,
+            'user_id':   self.user_id,
+            'device_id': self.device_id,
             'signature': b64u_encode(sig),
         })
         r.raise_for_status()

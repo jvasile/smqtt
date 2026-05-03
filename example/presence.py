@@ -61,9 +61,10 @@ _JWT_SECRET = os.urandom(32)
 @_mock_app.route('/register', methods=['POST'])
 def _register():
     data = request.json
-    user_id = str(uuid.uuid4())[:8]
+    user_id   = str(uuid.uuid4())[:8]
+    device_id = str(uuid.uuid4())[:8]
     _users[user_id] = {'pubkey_raw': b64u_decode(data['pubkey'])}
-    return jsonify({'user_id': user_id})
+    return jsonify({'user_id': user_id, 'device_id': device_id})
 
 
 @_mock_app.route('/auth/challenge')
@@ -235,6 +236,7 @@ class User:
 
         mqc.on_connect = on_connect
         mqc.on_message = on_message
+        mqc.username_pw_set(self.client.user_id, self.client.jwt)
         mqc.connect(MQTT_HOST, MQTT_PORT, keepalive=60)
         mqc.loop_start()
 
