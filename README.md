@@ -147,6 +147,15 @@ bin/dosh test    # run test suite
 bin/dosh run     # run the debug binary
 ```
 
+## Bug tracking
+
+Bugs and feature work are tracked with [git-bug](https://github.com/git-bug/git-bug),
+embedded directly in this repository. No external issue tracker needed.
+
+```
+git bug bug status:open
+```
+
 ## License and Copyright
 
 We're using the open source COAL license.  See LICENSE for details.
