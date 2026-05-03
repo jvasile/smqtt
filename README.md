@@ -119,6 +119,12 @@ Fuzzing (not pushed yet) required Rust's nightly compiler:
 rustup default nightly
 ```
 
+## License and Copyright
+
+We're using the open source COAL license.  See LICENSE for details.
+
+Copyright 2026 James Vasile
+
 ## Clients
 
 SMQTT is the server component of [Surveil
