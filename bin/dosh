@@ -26,6 +26,12 @@ test() {
     cargo test --manifest-path "${BASEDIR}/Cargo.toml"
 }
 
+test-example() {
+    ## Build debug binary and run the example smoke test
+    cargo build --manifest-path "${BASEDIR}/Cargo.toml"
+    python3 "${BASEDIR}/example/smoke_test.py" "${BASEDIR}/target/debug/smqtt"
+}
+
 run() {
     ## Run the server with the dev config
     "${BASEDIR}/target/debug/smqtt" "$@"
