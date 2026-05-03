@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 # MQTT broker
 rmqtt       = { path = "../rmqtt/rmqtt" }
+dotenvy     = "0.15"
 
 # HTTP
 axum        = { version = "0.7", features = ["macros"] }

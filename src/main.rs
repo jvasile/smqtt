@@ -17,11 +17,16 @@ use crate::{
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let (cfg_path, env_path) = parse_args();
+
+    if let Some(path) = env_path {
+        dotenvy::from_path(&path)
+            .map_err(|e| anyhow::anyhow!("failed to load env file {path:?}: {e}"))?;
+    }
+
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
         .init();
-
-    let cfg_path = std::env::args().nth(1).unwrap_or_else(|| "smqtt.toml".into());
     let config = Config::load(&cfg_path)?;
 
     let db    = db::connect(&config.database.path).await?;
@@ -48,4 +53,22 @@ async fn main() -> anyhow::Result<()> {
     axum::serve(listener, router).await?;
 
     Ok(())
+}
+
+fn parse_args() -> (String, Option<String>) {
+    let mut args = std::env::args().skip(1);
+    let mut cfg_path = None;
+    let mut env_path = None;
+
+    while let Some(arg) = args.next() {
+        if arg == "--env" {
+            env_path = args.next();
+        } else if let Some(val) = arg.strip_prefix("--env=") {
+            env_path = Some(val.to_owned());
+        } else if cfg_path.is_none() {
+            cfg_path = Some(arg);
+        }
+    }
+
+    (cfg_path.unwrap_or_else(|| "smqtt.toml".into()), env_path)
 }
