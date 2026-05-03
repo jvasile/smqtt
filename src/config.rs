@@ -79,6 +79,7 @@ pub struct SuspensionConfig {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct AdminConfig {
+    #[serde(default)]
     pub api_key: String,
 }
 
@@ -99,6 +100,18 @@ impl Config {
                     .try_parsing(true),
             )
             .build()?;
-        Ok(cfg.try_deserialize()?)
+        let me: Self = cfg.try_deserialize()?;
+        me.validate()?;
+        Ok(me)
+    }
+
+    fn validate(&self) -> anyhow::Result<()> {
+        if self.admin.api_key.is_empty() {
+            anyhow::bail!(
+                "admin.api_key is not set.\n\
+                 Generate one with: openssl rand -hex 32"
+            );
+        }
+        Ok(())
     }
 }
