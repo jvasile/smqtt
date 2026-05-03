@@ -77,7 +77,10 @@ fn parse_args() -> (String, Option<String>) {
     let mut env_path = None;
 
     while let Some(arg) = args.next() {
-        if arg == "--env" {
+        if arg == "--help" || arg == "-h" {
+            print_help();
+            std::process::exit(0);
+        } else if arg == "--env" {
             env_path = args.next();
         } else if let Some(val) = arg.strip_prefix("--env=") {
             env_path = Some(val.to_owned());
@@ -87,4 +90,16 @@ fn parse_args() -> (String, Option<String>) {
     }
 
     (cfg_path.unwrap_or_else(|| "smqtt.toml".into()), env_path)
+}
+
+fn print_help() {
+    println!("\
+Usage: smqtt [OPTIONS] [CONFIG]
+
+Arguments:
+  [CONFIG]   Path to the TOML config file  [default: smqtt.toml]
+
+Options:
+  --env <FILE>   Load environment variables from FILE before startup
+  -h, --help     Print this message and exit");
 }
