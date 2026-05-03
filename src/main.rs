@@ -26,7 +26,8 @@ async fn main() -> anyhow::Result<()> {
 
     let db    = db::connect(&config.database.path).await?;
     let keys  = JwtKeys::from_base64(&config.jwt.signing_key)?;
-    let state = AppState::new(db, config.clone(), keys);
+    let scx   = rmqtt::context::ServerContext::new().node_id(1).build().await;
+    let state = AppState::new(db, config.clone(), keys, scx);
 
     let http_bind = config.http.bind.clone();
     let mqtt_bind = config.mqtt.bind.clone();

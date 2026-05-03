@@ -1,12 +1,16 @@
 use std::sync::Arc;
 use dashmap::DashMap;
 use sqlx::SqlitePool;
+use rmqtt::context::ServerContext;
 
 use crate::config::Config;
-use crate::crypto::JwtKeys;
+use crate::crypto::{Claims, JwtKeys};
 
 /// In-memory challenge store: user_id -> (nonce_bytes, expires_at_unix_secs)
 pub type Challenges = Arc<DashMap<String, (Vec<u8>, u64)>>;
+
+/// In-memory session store: mqtt client_id -> verified JWT claims
+pub type Sessions = Arc<DashMap<String, Claims>>;
 
 /// Shared application state passed to all Axum handlers and the broker auth hook.
 #[derive(Clone)]
@@ -15,17 +19,21 @@ pub struct AppState {
     pub config:     Arc<Config>,
     pub jwt_keys:   Arc<JwtKeys>,
     pub challenges: Challenges,
+    pub sessions:   Sessions,
+    pub scx:        ServerContext,
     /// SMQTT node id — used when publishing system messages into rmqtt.
     pub node_id:    u64,
 }
 
 impl AppState {
-    pub fn new(db: SqlitePool, config: Config, jwt_keys: JwtKeys) -> Self {
+    pub fn new(db: SqlitePool, config: Config, jwt_keys: JwtKeys, scx: ServerContext) -> Self {
         Self {
             db,
             config:     Arc::new(config),
             jwt_keys:   Arc::new(jwt_keys),
             challenges: Arc::new(DashMap::new()),
+            sessions:   Arc::new(DashMap::new()),
+            scx,
             node_id:    1,
         }
     }

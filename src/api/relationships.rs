@@ -76,5 +76,9 @@ pub async fn revoke(
     AuthUser(user_id): AuthUser,
     Path(relationship_id): Path<String>,
 ) -> Result<()> {
-    db::delete_relationship(&state.db, &user_id, &relationship_id).await
+    let rel = db::get_relationship(&state.db, &user_id, &relationship_id).await?;
+    db::delete_relationship(&state.db, &user_id, &relationship_id).await?;
+    crate::broker::kick_user(&state, &user_id).await;
+    crate::broker::kick_user(&state, &rel.peer_id).await;
+    Ok(())
 }

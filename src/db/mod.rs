@@ -161,6 +161,24 @@ pub async fn list_relationships(pool: &SqlitePool, user_id: &str) -> Result<Vec<
     .await?)
 }
 
+pub async fn get_relationship(
+    pool: &SqlitePool,
+    user_id: &str,
+    relationship_id: &str,
+) -> Result<Relationship> {
+    sqlx::query_as!(
+        Relationship,
+        "SELECT relationship_id as \"relationship_id!\", user_id as \"user_id!\",
+                peer_id as \"peer_id!\", publish_topics as \"publish_topics!\",
+                subscribe_topics as \"subscribe_topics!\", created_at as \"created_at!\"
+         FROM relationships WHERE relationship_id = ? AND user_id = ?",
+        relationship_id, user_id
+    )
+    .fetch_optional(pool)
+    .await?
+    .ok_or(Error::NotFound)
+}
+
 pub async fn delete_relationship(
     pool: &SqlitePool,
     user_id: &str,

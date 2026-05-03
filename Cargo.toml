@@ -6,7 +6,6 @@ edition = "2021"
 [dependencies]
 # MQTT broker
 rmqtt       = { path = "../rmqtt/rmqtt" }
-rmqtt-codec = { path = "../rmqtt/rmqtt-codec" }
 
 # HTTP
 axum        = { version = "0.7", features = ["macros"] }
