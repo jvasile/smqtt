@@ -111,6 +111,14 @@ cargo build --release
 ./target/release/smqtt --config smqtt.toml
 ```
 
+## Development
+
+Fuzzing (not pushed yet) required Rust's nightly compiler:
+
+```
+rustup default nightly
+```
+
 ## Clients
 
 SMQTT is the server component of [Surveil
