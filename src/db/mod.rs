@@ -25,10 +25,14 @@ pub async fn connect(path: &str) -> anyhow::Result<SqlitePool> {
 
 #[allow(dead_code)]
 pub struct User {
-    pub user_id:        String,
-    pub created_at:     i64,
-    pub suspended:      bool,
-    pub suspend_reason: Option<String>,
+    pub user_id:            String,
+    pub created_at:         i64,
+    pub suspended:          bool,
+    pub suspend_reason:     Option<String>,
+    /// See migration 002 for a full explanation.
+    /// Any JWT with iat < tokens_valid_from is rejected at MQTT connect,
+    /// forcing re-auth after a kick so stale topic permissions cannot be replayed.
+    pub tokens_valid_from:  i64,
 }
 
 pub async fn create_user(pool: &SqlitePool) -> Result<User> {
@@ -40,20 +44,32 @@ pub async fn create_user(pool: &SqlitePool) -> Result<User> {
     )
     .execute(pool)
     .await?;
-    Ok(User { user_id, created_at: now, suspended: false, suspend_reason: None })
+    Ok(User { user_id, created_at: now, suspended: false, suspend_reason: None, tokens_valid_from: 0 })
 }
 
 pub async fn get_user(pool: &SqlitePool, user_id: &str) -> Result<User> {
     sqlx::query_as!(
         User,
         "SELECT user_id as \"user_id!\", created_at as \"created_at!\",
-                suspended as \"suspended: bool\", suspend_reason
+                suspended as \"suspended: bool\", suspend_reason,
+                tokens_valid_from as \"tokens_valid_from: i64\"
          FROM users WHERE user_id = ?",
         user_id
     )
     .fetch_optional(pool)
     .await?
     .ok_or(Error::NotFound)
+}
+
+pub async fn invalidate_tokens(pool: &SqlitePool, user_id: &str) -> Result<()> {
+    let now = unix_now() as i64;
+    sqlx::query!(
+        "UPDATE users SET tokens_valid_from = ? WHERE user_id = ?",
+        now, user_id
+    )
+    .execute(pool)
+    .await?;
+    Ok(())
 }
 
 pub async fn set_suspended(

@@ -1,0 +1,18 @@
+-- tokens_valid_from: the earliest Unix timestamp at which a JWT is considered
+-- valid for this user.
+--
+-- Problem: JWTs are stateless and signed. Once issued, a JWT cannot be
+-- invalidated server-side — the signature will verify until the token expires.
+-- When a relationship is revoked, we kick the peer's active MQTT session, but
+-- a kicked client can immediately reconnect with its old JWT (still valid) and
+-- regain access with stale topic permissions.
+--
+-- Solution: on every kick, set tokens_valid_from = now for the affected user.
+-- The broker auth hook checks claims.iat (issued-at) >= tokens_valid_from. Any
+-- JWT issued before the kick timestamp is rejected, forcing the client through
+-- the full challenge-response re-auth flow to obtain a fresh JWT that reflects
+-- the current relationship state.
+--
+-- DEFAULT 0 means all existing tokens are valid until a kick occurs. NULL is
+-- avoided so the auth hook can use a simple integer comparison without nullchecks.
+ALTER TABLE users ADD COLUMN tokens_valid_from INTEGER NOT NULL DEFAULT 0;

@@ -51,9 +51,23 @@ impl SmqttAuthHandler {
             Err(_) => return deny(),
         };
 
-        match crate::db::get_user(&self.state.db, &claims.sub).await {
-            Ok(user) if !user.suspended => {}
+        // Enforce that the MQTT client_id matches the device_id in the JWT.
+        // This binds each connection to a specific device, which lets kick_user
+        // reliably disconnect sessions by device_id. Without this check, a client
+        // could connect with an arbitrary client_id and evade targeted kicks.
+        if &*connect_info.client_id() != claims.dev.as_str() {
+            return deny();
+        }
+
+        let user = match crate::db::get_user(&self.state.db, &claims.sub).await {
+            Ok(u) if !u.suspended => u,
             _ => return deny(),
+        };
+
+        // Reject tokens issued before the last kick. See db::invalidate_tokens
+        // and migration 002 for why this check exists.
+        if (claims.iat as i64) < user.tokens_valid_from {
+            return deny();
         }
 
         self.state.sessions.insert(connect_info.client_id().to_string(), claims);

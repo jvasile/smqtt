@@ -198,8 +198,8 @@ def test_key_exchange(server: SmqttProcess, alice: SmqttClient):
 def test_mqtt_pubsub(server: SmqttProcess, alice: SmqttClient, bob: SmqttClient,
                      secret_a: SharedSecret, secret_b: SharedSecret):
     print("\nMQTT pub/sub")
-    mqc_a = MqttClient("127.0.0.1", server.mqtt_port, alice.user_id, alice.jwt)
-    mqc_b = MqttClient("127.0.0.1", server.mqtt_port, bob.user_id,   bob.jwt)
+    mqc_a = MqttClient("127.0.0.1", server.mqtt_port, alice.device_id, alice.jwt)
+    mqc_b = MqttClient("127.0.0.1", server.mqtt_port, bob.device_id,   bob.jwt)
 
     check("alice connects to broker", mqc_a.is_connected())
     check("bob connects to broker",   mqc_b.is_connected())
@@ -222,7 +222,7 @@ def test_mqtt_pubsub(server: SmqttProcess, alice: SmqttClient, bob: SmqttClient,
 
 def test_unpermitted_topic(server: SmqttProcess, alice: SmqttClient):
     print("\nUnpermitted topic rejection")
-    mqc = MqttClient("127.0.0.1", server.mqtt_port, alice.user_id, alice.jwt)
+    mqc = MqttClient("127.0.0.1", server.mqtt_port, alice.device_id, alice.jwt)
 
     # Subscribe to a random topic alice has no claim to
     mqc.subscribe("not-alices-topic")
@@ -232,7 +232,7 @@ def test_unpermitted_topic(server: SmqttProcess, alice: SmqttClient):
     eve = SmqttClient(server.url)
     eve.register()
     eve.authenticate()
-    mqc_eve = MqttClient("127.0.0.1", server.mqtt_port, eve.user_id, eve.jwt)
+    mqc_eve = MqttClient("127.0.0.1", server.mqtt_port, eve.device_id, eve.jwt)
     mqc_eve.publish("not-alices-topic", b"eve snoops")
     got = mqc.wait_for_message(timeout=1.0)
     check("alice does not receive message on unpermitted topic", not got)

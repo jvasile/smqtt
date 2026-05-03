@@ -62,10 +62,21 @@ pub async fn publish_system(state: &AppState, topic: &str, payload: Vec<u8>) {
     }
 }
 
-/// Force-disconnect all sessions for a user.
-/// Called on suspension or relationship revocation so the client re-auths
-/// and gets a JWT reflecting the updated topic list.
+/// Force-disconnect all sessions for a user and invalidate their outstanding JWTs.
+///
+/// Two-step process, both steps are necessary:
+///   1. Kick closes any active MQTT connections immediately.
+///   2. invalidate_tokens sets tokens_valid_from = now in the DB so that if the
+///      client reconnects before re-authing it cannot reuse the old JWT — the
+///      broker auth hook rejects any token with iat < tokens_valid_from.
+///
+/// Without step 2, a kicked client could silently reconnect with its stale JWT
+/// and retain access to topics that should have been revoked.
 pub async fn kick_user(state: &AppState, user_id: &str) {
+    if let Err(e) = crate::db::invalidate_tokens(&state.db, user_id).await {
+        tracing::warn!("kick_user: failed to invalidate tokens for {user_id}: {e}");
+    }
+
     let shared = state.scx.extends.shared().await;
     let devices = match crate::db::get_device_by_user(&state.db, user_id).await {
         Ok(d)  => d,
