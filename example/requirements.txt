@@ -1,0 +1,5 @@
+cryptography>=42.0.0
+paho-mqtt>=1.6.0
+requests>=2.31.0
+flask>=3.0.0
+PyJWT>=2.8.0
