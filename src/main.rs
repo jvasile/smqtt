@@ -37,6 +37,21 @@ async fn main() -> anyhow::Result<()> {
     let http_bind = config.http.bind.clone();
     let mqtt_bind = config.mqtt.bind.clone();
 
+    // Periodically purge expired key exchanges
+    let purge_db = state.db.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(3600));
+        interval.tick().await; // skip the immediate first tick
+        loop {
+            interval.tick().await;
+            match db::purge_expired_exchanges(&purge_db).await {
+                Ok(n) if n > 0 => tracing::info!("purged {n} expired exchanges"),
+                Err(e)         => tracing::warn!("exchange purge failed: {e}"),
+                _              => {}
+            }
+        }
+    });
+
     // Spawn broker in background task
     let broker_state = state.clone();
     tokio::spawn(async move {
