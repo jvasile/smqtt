@@ -138,10 +138,13 @@ file can be shipped with non-secret defaults and secrets injected at deploy time
 
 ## Development
 
-Fuzzing (not pushed yet) required Rust's nightly compiler:
+`bin/dosh` is a task runner for common development commands:
 
 ```
-rustup default nightly
+bin/dosh build   # release binary
+bin/dosh dev     # debug binary
+bin/dosh test    # run test suite
+bin/dosh run     # run the debug binary
 ```
 
 ## License and Copyright

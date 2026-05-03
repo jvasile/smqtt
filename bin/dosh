@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Do - The Simplest Build Tool on Earth.
+# Documentation and examples see https://github.com/8gears/do
+
+set -e
+
+SCRIPTNAME=$(basename "$0")
+BASEDIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/..
+
+[ -f "${BASEDIR}/.env" ] && source "${BASEDIR}/.env"
+
+export DATABASE_URL="${DATABASE_URL:-sqlite:${BASEDIR}/smqtt-dev.db}"
+
+build() {
+    ## Build the release binary
+    cargo build --release --manifest-path "${BASEDIR}/Cargo.toml"
+}
+
+dev() {
+    ## Build a debug binary
+    cargo build --manifest-path "${BASEDIR}/Cargo.toml"
+}
+
+test() {
+    ## Run the test suite
+    cargo test --manifest-path "${BASEDIR}/Cargo.toml"
+}
+
+run() {
+    ## Run the server with the dev config
+    "${BASEDIR}/target/debug/smqtt" "$@"
+}
+
+"$@"
+[ "$#" -gt 0 ] || printf "Usage:\n\t./%s %s\n" \
+    "${SCRIPTNAME}" "($(compgen -A function | grep '^[^_]' | paste -sd '|' -))"
