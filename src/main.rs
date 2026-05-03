@@ -1,5 +1,6 @@
 mod api;
 mod broker;
+#[cfg(test)] mod tests;
 mod config;
 mod crypto;
 mod db;
