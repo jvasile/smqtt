@@ -73,7 +73,7 @@ impl SmqttAuthHandler {
         &self,
         session: &Session,
         subscribe: &Subscribe,
-        acc: Option<HookResult>,
+        _acc: Option<HookResult>,
     ) -> ReturnType {
         let client_id = &*session.id().client_id;
         let allowed = self.state.sessions
