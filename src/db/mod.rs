@@ -23,6 +23,7 @@ pub async fn connect(path: &str) -> anyhow::Result<SqlitePool> {
 
 // ── Users ─────────────────────────────────────────────────────────────────────
 
+#[allow(dead_code)]
 pub struct User {
     pub user_id:        String,
     pub created_at:     i64,
@@ -73,6 +74,7 @@ pub async fn set_suspended(
 
 // ── Devices ───────────────────────────────────────────────────────────────────
 
+#[allow(dead_code)]
 pub struct Device {
     pub device_id:     String,
     pub user_id:       String,
@@ -213,6 +215,7 @@ pub async fn user_topics(
 
 // ── Pending exchanges ─────────────────────────────────────────────────────────
 
+#[allow(dead_code)]
 pub struct PendingExchange {
     pub exchange_id:      String,
     pub initiator_id:     String,

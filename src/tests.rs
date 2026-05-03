@@ -165,12 +165,12 @@ async fn test_key_exchange() {
     assert_eq!(body["initiator_pubkey"].as_str().unwrap(), alice_pubkey_b64);
     assert_eq!(body["responder_pubkey"].as_str().unwrap(), bob_pubkey_b64);
 
-    // Third party (neither alice nor bob) cannot fetch the exchange
+    // Record is deleted after initiator retrieves completed exchange; eve gets 404
     let (_, _, eve_token) = register_and_auth(&app).await;
     let resp = app.clone()
         .oneshot(get_req(&format!("/exchange/{exchange_id}"), Some(&eve_token)))
         .await.unwrap();
-    assert_eq!(resp.status(), StatusCode::FORBIDDEN);
+    assert_eq!(resp.status(), StatusCode::NOT_FOUND);
 }
 
 #[tokio::test]

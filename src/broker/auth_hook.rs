@@ -36,16 +36,8 @@ impl SmqttAuthHandler {
     async fn authenticate(
         &self,
         connect_info: &ConnectInfo,
-        acc: Option<HookResult>,
+        _acc: Option<HookResult>,
     ) -> ReturnType {
-        if matches!(
-            acc,
-            Some(HookResult::AuthResult(AuthResult::BadUsernameOrPassword))
-                | Some(HookResult::AuthResult(AuthResult::NotAuthorized))
-        ) {
-            return (false, acc);
-        }
-
         let token = match connect_info.password() {
             Some(pw) => match std::str::from_utf8(pw) {
                 Ok(s) => s.to_owned(),

@@ -22,12 +22,19 @@ dev() {
 }
 
 test() {
-    ## Run the test suite
-    cargo test --manifest-path "${BASEDIR}/Cargo.toml"
+    ## Build once, then run cargo tests and smoke test in parallel
+    pip install -q -r "${BASEDIR}/example/requirements.txt"
+    cargo build --tests --manifest-path "${BASEDIR}/Cargo.toml"
+    local pids=() status=0
+    cargo test --manifest-path "${BASEDIR}/Cargo.toml" & pids+=($!)
+    python3 "${BASEDIR}/example/smoke_test.py" "${BASEDIR}/target/debug/smqtt" & pids+=($!)
+    for pid in "${pids[@]}"; do wait "$pid" || status=$?; done
+    return $status
 }
 
 test-example() {
     ## Build debug binary and run the example smoke test
+    pip install -q -r "${BASEDIR}/example/requirements.txt"
     cargo build --manifest-path "${BASEDIR}/Cargo.toml"
     python3 "${BASEDIR}/example/smoke_test.py" "${BASEDIR}/target/debug/smqtt"
 }

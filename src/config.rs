@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct Config {
     pub database:      DatabaseConfig,
     pub http:          HttpConfig,
@@ -71,6 +72,7 @@ pub enum PolicyKind {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct SuspensionConfig {
     #[serde(rename = "type")]
     pub kind: PolicyKind,
@@ -93,7 +95,7 @@ pub struct NotificationsConfig {
 impl Config {
     pub fn load(path: &str) -> anyhow::Result<Self> {
         let cfg = config::Config::builder()
-            .add_source(config::File::with_name(path))
+            .add_source(config::File::with_name(path).required(false))
             .add_source(
                 config::Environment::with_prefix("SMQTT")
                     .separator("__")

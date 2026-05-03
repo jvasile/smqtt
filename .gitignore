@@ -5,3 +5,5 @@
 .sqlx
 .claude
 *.db
+fuzz/
+__pycache__/

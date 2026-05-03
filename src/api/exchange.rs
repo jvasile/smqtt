@@ -70,12 +70,21 @@ pub async fn get(
         return Err(Error::Forbidden);
     }
 
+    let complete        = ex.responder_pubkey.is_some();
+    let is_initiator    = ex.initiator_id == user_id;
+    let responder_pubkey = ex.responder_pubkey.map(|b| b64_encode(&b));
+
+    // Both parties now have each other's keys — discard the record
+    if complete && is_initiator {
+        let _ = db::delete_exchange(&state.db, &exchange_id).await;
+    }
+
     Ok(Json(ExchangeResponse {
-        exchange_id:      ex.exchange_id,
+        exchange_id,
         initiator_id:     ex.initiator_id,
         responder_id:     ex.responder_id,
         initiator_pubkey: b64_encode(&ex.initiator_pubkey),
-        responder_pubkey: ex.responder_pubkey.map(|b| b64_encode(&b)),
+        responder_pubkey,
     }))
 }
 

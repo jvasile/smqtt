@@ -22,6 +22,7 @@ pub async fn run(state: AppState, bind: &str) -> anyhow::Result<()> {
     register.add_priority(Type::ClientAuthenticate,      10, handler.clone()).await;
     register.add_priority(Type::ClientSubscribeCheckAcl, 10, handler.clone()).await;
     register.add_priority(Type::ClientDisconnected,      10, handler).await;
+    register.start().await;
 
     let addr: std::net::SocketAddr = bind.parse()?;
 

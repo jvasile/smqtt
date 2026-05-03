@@ -88,8 +88,6 @@ class SmqttProcess:
         self._proc = subprocess.Popen(
             [binary],
             env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
         )
         wait_for_port("127.0.0.1", self.http_port)
         wait_for_port("127.0.0.1", self.mqtt_port)
@@ -189,6 +187,10 @@ def test_key_exchange(server: SmqttProcess, alice: SmqttClient):
 
     check("topics match across both sides",
           secret_a.outbound_topic(alice.user_id) == secret_b.inbound_topic(bob.user_id))
+
+    # Re-authenticate to get JWTs that include the new relationship topics
+    alice.authenticate()
+    bob.authenticate()
 
     return bob, secret_a, secret_b
 
