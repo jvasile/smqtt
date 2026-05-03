@@ -93,6 +93,11 @@ impl Config {
     pub fn load(path: &str) -> anyhow::Result<Self> {
         let cfg = config::Config::builder()
             .add_source(config::File::with_name(path))
+            .add_source(
+                config::Environment::with_prefix("SMQTT")
+                    .separator("__")
+                    .try_parsing(true),
+            )
             .build()?;
         Ok(cfg.try_deserialize()?)
     }

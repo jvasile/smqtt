@@ -89,7 +89,11 @@ fn parse_args() -> (String, Option<String>) {
         }
     }
 
-    (cfg_path.unwrap_or_else(|| "smqtt.toml".into()), env_path)
+    let cfg_path = cfg_path
+        .or_else(|| std::env::var("SMQTT_CONFIG").ok())
+        .unwrap_or_else(|| "smqtt.toml".into());
+
+    (cfg_path, env_path)
 }
 
 fn print_help() {
@@ -98,8 +102,19 @@ Usage: smqtt [OPTIONS] [CONFIG]
 
 Arguments:
   [CONFIG]   Path to the TOML config file  [default: smqtt.toml]
+             Also set via SMQTT_CONFIG env var; CLI arg takes precedence.
 
 Options:
   --env <FILE>   Load environment variables from FILE before startup
-  -h, --help     Print this message and exit");
+  -h, --help     Print this message and exit
+
+Config env vars (override values in the TOML file):
+  SMQTT__DATABASE__PATH
+  SMQTT__HTTP__BIND
+  SMQTT__MQTT__BIND
+  SMQTT__REGISTRATION__MODE
+  SMQTT__ADMIN__API_KEY
+  SMQTT__NOTIFICATIONS__NOTIFY_SECRET
+  SMQTT__JWT__SIGNING_KEY
+  SMQTT__JWT__TTL_SECONDS");
 }

@@ -108,8 +108,33 @@ cargo build --release
 ## Running
 
 ```
-./target/release/smqtt --config smqtt.toml
+./target/release/smqtt [CONFIG]
 ```
+
+`CONFIG` defaults to `smqtt.toml`. It can also be set via the `SMQTT_CONFIG`
+environment variable; a CLI argument takes precedence.
+
+Pass `--env <file>` to load a `.env` file into the environment before startup,
+which is useful for injecting secrets without putting them in the TOML file.
+
+### Config environment variables
+
+All settings in the TOML file can be overridden with environment variables.
+Use the prefix `SMQTT__` with `__` as the separator between nested keys:
+
+| Variable | TOML equivalent |
+|---|---|
+| `SMQTT__DATABASE__PATH` | `database.path` |
+| `SMQTT__HTTP__BIND` | `http.bind` |
+| `SMQTT__MQTT__BIND` | `mqtt.bind` |
+| `SMQTT__REGISTRATION__MODE` | `registration.mode` |
+| `SMQTT__ADMIN__API_KEY` | `admin.api_key` |
+| `SMQTT__NOTIFICATIONS__NOTIFY_SECRET` | `notifications.notify_secret` |
+| `SMQTT__JWT__SIGNING_KEY` | `jwt.signing_key` |
+| `SMQTT__JWT__TTL_SECONDS` | `jwt.ttl_seconds` |
+
+Environment variables override values in the TOML file, so a minimal config
+file can be shipped with non-secret defaults and secrets injected at deploy time.
 
 ## Development
 
