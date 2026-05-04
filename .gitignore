@@ -2,7 +2,6 @@
 .env.d
 .env.local
 .envrc.local
-.sqlx
 .claude
 *.db
 fuzz/
