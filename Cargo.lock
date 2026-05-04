@@ -2435,7 +2435,9 @@ dependencies = [
 
 [[package]]
 name = "rmqtt"
-version = "0.21.0"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09091db7ffed2a44c3e540fd145b6a6d18c6790b49570df61e8a6b88bafc5f22"
 dependencies = [
  "ahash",
  "anyhow",

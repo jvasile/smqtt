@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # MQTT broker
-rmqtt       = { path = "../rmqtt/rmqtt" }
+rmqtt       = "0.20"
 dotenvy     = "0.15"
 
 # HTTP
