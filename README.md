@@ -112,14 +112,15 @@ cargo build --release
 ```
 
 `CONFIG` defaults to `smqtt.toml`. It can also be set via the `SMQTT_CONFIG`
-environment variable; a CLI argument takes precedence.
+environment variable; a CLI argument takes precedence. The TOML file is
+optional — all settings can be provided via environment variables alone.
 
 Pass `--env <file>` to load a `.env` file into the environment before startup,
 which is useful for injecting secrets without putting them in the TOML file.
 
 ### Config environment variables
 
-All settings in the TOML file can be overridden with environment variables.
+All settings can be set via environment variables, with or without a TOML file.
 Use the prefix `SMQTT__` with `__` as the separator between nested keys:
 
 | Variable | TOML equivalent |
@@ -133,8 +134,9 @@ Use the prefix `SMQTT__` with `__` as the separator between nested keys:
 | `SMQTT__JWT__SIGNING_KEY` | `jwt.signing_key` |
 | `SMQTT__JWT__TTL_SECONDS` | `jwt.ttl_seconds` |
 
-Environment variables override values in the TOML file, so a minimal config
-file can be shipped with non-secret defaults and secrets injected at deploy time.
+Environment variables override values in the TOML file. A common pattern is to
+ship a minimal TOML file with non-secret defaults and inject secrets at deploy
+time via environment variables, but a TOML file is not required at all.
 
 ## Development
 
