@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO pending_exchanges\n         (exchange_id, initiator_id, responder_id, initiator_pubkey, created_at, expires_at)\n         VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "ed7bfbcd3ca3aca95d94b12826b6a5749f91658333eea4a8f7d5060c32054e5b"
+}

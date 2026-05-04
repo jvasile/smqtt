@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM pending_exchanges WHERE exchange_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "5305eb855f191afce42479779faa9e310c0a8deb38ea60cc1318ec6cb5893885"
+}

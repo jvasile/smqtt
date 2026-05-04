@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE registration_tokens\n         SET uses = uses + 1\n         WHERE token_hash = ? AND expires_at > ? AND uses < max_uses",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "d9f814957a893e0a72b51565269ccb8d3225c1eb017d585d2892dfd65ae82e1f"
+}

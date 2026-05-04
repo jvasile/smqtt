@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT relationship_id as \"relationship_id!\", user_id as \"user_id!\",\n                peer_id as \"peer_id!\", publish_topics as \"publish_topics!\",\n                subscribe_topics as \"subscribe_topics!\", created_at as \"created_at!\"\n         FROM relationships WHERE relationship_id = ? AND user_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "relationship_id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "user_id!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "peer_id!",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "publish_topics!",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "subscribe_topics!",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 5,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "90a15ccabc8876a28eb401ec0e30ddd3c152322c018a231a11d93eba4f9ffa45"
+}

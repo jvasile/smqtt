@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE users SET tokens_valid_from = ? WHERE user_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "cf6d7a6b8f36ae61bcba5a55b434e227dc95570ebb683dc859181de8e77ba289"
+}

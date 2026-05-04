@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT user_id as \"user_id!\", created_at as \"created_at!\",\n                suspended as \"suspended: bool\", suspend_reason,\n                tokens_valid_from as \"tokens_valid_from: i64\"\n         FROM users WHERE user_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "user_id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 1,
+        "type_info": "Int64"
+      },
+      {
+        "name": "suspended: bool",
+        "ordinal": 2,
+        "type_info": "Int64"
+      },
+      {
+        "name": "suspend_reason",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "tokens_valid_from: i64",
+        "ordinal": 4,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "4c5532a1730242892c5eb322ea61687eeaad2454bfd1999f39843038219728aa"
+}

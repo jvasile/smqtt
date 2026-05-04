@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT exchange_id as \"exchange_id!\", initiator_id as \"initiator_id!\",\n                responder_id as \"responder_id!\", initiator_pubkey as \"initiator_pubkey!\",\n                responder_pubkey, created_at as \"created_at!\", expires_at as \"expires_at!\"\n         FROM pending_exchanges WHERE exchange_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "exchange_id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "initiator_id!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "responder_id!",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "initiator_pubkey!",
+        "ordinal": 3,
+        "type_info": "Blob"
+      },
+      {
+        "name": "responder_pubkey",
+        "ordinal": 4,
+        "type_info": "Blob"
+      },
+      {
+        "name": "created_at!",
+        "ordinal": 5,
+        "type_info": "Int64"
+      },
+      {
+        "name": "expires_at!",
+        "ordinal": 6,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "1c6a598137f41a0eec44f465e21abd50900fbad3d53a3f74793164c0a055a309"
+}

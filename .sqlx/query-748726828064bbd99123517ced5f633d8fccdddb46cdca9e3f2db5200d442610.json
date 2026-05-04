@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE pending_exchanges SET responder_pubkey = ? WHERE exchange_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "748726828064bbd99123517ced5f633d8fccdddb46cdca9e3f2db5200d442610"
+}

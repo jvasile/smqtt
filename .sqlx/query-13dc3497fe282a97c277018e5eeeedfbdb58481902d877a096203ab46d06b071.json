@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT device_id as \"device_id!\", user_id as \"user_id!\",\n                pubkey as \"pubkey!\", registered_at as \"registered_at!\"\n         FROM devices WHERE user_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "device_id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "user_id!",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "pubkey!",
+        "ordinal": 2,
+        "type_info": "Blob"
+      },
+      {
+        "name": "registered_at!",
+        "ordinal": 3,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "13dc3497fe282a97c277018e5eeeedfbdb58481902d877a096203ab46d06b071"
+}

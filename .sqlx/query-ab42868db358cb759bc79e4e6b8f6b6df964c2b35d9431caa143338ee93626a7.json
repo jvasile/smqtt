@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO relationships\n         (relationship_id, user_id, peer_id, publish_topics, subscribe_topics, created_at)\n         VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "ab42868db358cb759bc79e4e6b8f6b6df964c2b35d9431caa143338ee93626a7"
+}
